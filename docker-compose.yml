@@ -1,0 +1,18 @@
+services:
+  lucky-server:
+    build: .
+    container_name: lucky-server
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    volumes:
+      # SQLite 数据持久化（本地的 data 目录挂载到容器）
+      - ./data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
